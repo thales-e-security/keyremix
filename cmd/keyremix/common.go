@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"git.tesfabric.com/ignite/keyremix"
+	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"os"
+	"syscall"
 )
 
 var inputPath, inputFormat string
@@ -61,7 +64,18 @@ func readInput(inputPath string, inputFormat string, inargs map[string]string) (
 		}
 	}
 	// Attempt to parse the input
-	if key, _, err = format.Deserialize(input, inargs); err != nil {
+	if key, _, err = format.Deserialize(input, inargs); err == keyremix.ErrPasswordRequired {
+		var password []byte
+		if _, err = fmt.Printf("Enter decryption password: "); err != nil {
+			return
+		}
+		if password, err = terminal.ReadPassword(int(syscall.Stdin)); err != nil {
+			return
+		}
+		inargs["password"] = string(password)
+		key, _, err = format.Deserialize(input, inargs)
+	}
+	if err != nil {
 		err = fmt.Errorf("deserializing key as %s: %s", format.Name(), err)
 		return
 	}
@@ -79,7 +93,36 @@ func writeOutput(outputPath string, outputFormat string, key interface{}, outarg
 	// TODO should be an option to do private->public derivation (also public->private l-)
 	// Convert to the output format
 	var output []byte
-	if output, err = format.Serialize(key, outargs); err != nil {
+	if output, err = format.Serialize(key, outargs); err == keyremix.ErrPasswordRequired {
+		var password, check []byte
+		for {
+			if _, err = fmt.Printf("Enter encryption password: "); err != nil {
+				return
+			}
+			if password, err = terminal.ReadPassword(int(syscall.Stdin)); err != nil {
+				return
+			}
+			if _, err = fmt.Printf("\nConfirm encryption password: "); err != nil {
+				return
+			}
+			if check, err = terminal.ReadPassword(int(syscall.Stdin)); err != nil {
+				return
+			}
+			if _, err = fmt.Printf("\n"); err != nil {
+				return
+			}
+			if bytes.Compare(password, check) == 0 {
+				break
+			}
+			if _, err = fmt.Printf("Password do not match, try again\n"); err != nil {
+				return
+			}
+		}
+		outargs["password"] = string(password)
+		output, err = format.Serialize(key, outargs)
+	}
+
+	if err != nil {
 		err = fmt.Errorf("serializing key as %s: %s", format.Name(), err)
 		return
 	}

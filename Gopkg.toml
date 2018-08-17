@@ -31,3 +31,11 @@
 [[constraint]]
   name = "github.com/lestrrat-go/jwx"
   branch = "master"
+
+[[constraint]]
+  name = "git.tesfabric.com/ignite/xcrypto"
+  branch = "master"
+
+[[constraint]]
+  name = "golang.org/x/crypto"
+  branch = "master"

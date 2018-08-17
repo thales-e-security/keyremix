@@ -53,6 +53,9 @@ type KeyFormat interface {
 // or in some cases when the input is not recognizable.
 var ErrUnsuitableKeyType = errors.New("unsuitable key type")
 
+// ErrPasswordRequired is returned when a password is required.
+var ErrPasswordRequired = errors.New("password required")
+
 // KeyFormats is the collection of known key formats.
 var KeyFormats = map[string]KeyFormat{}
 

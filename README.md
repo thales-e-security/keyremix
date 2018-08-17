@@ -90,8 +90,20 @@ Use `-T indent=N` to select multi-line output indentation of N spaces.
 
 ### `pkcs8` and `pksc8der`
 
-[PKCS#8/RFC5208]( https://tools.ietf.org/html/rfc5208) format.
+[PKCS#8/RFC5208](https://tools.ietf.org/html/rfc5208) format.
 * Only RSA and ECDSA private keys can be used.
+
+### `pkcs12`
+
+[PKCS#12/RFC7292](https://tools.ietf.org/html/rfc7292) format.
+* Only RSA and ECDSA private keys can be used.
+* A password must be supplied for input.
+It can specified with `-F password=STRING` for input or read from standard input.
+* A password must be supplied for output.
+It can be specified with `-T password=STRING` or read from standard input.
+* Input files must have exactly one key and associated certificate.
+* For output, a certificate may be specified with `-T certificate=FILENAME`.
+* For input, a path to write a certificacte may be specified with `-F certificate=FILENAME`.
 
 ### `pkix` and `pkixder`
 
@@ -112,5 +124,6 @@ X.509 certificate format.
 # General Remarks
 
 * The set of key types and formats reflects what is easy to do with Go.
-* Encryption and decryption of keys is not supported.
+* Encryption and decryption of keys is poorly supported.
+* Passwords are specified on the command line!
 * Test coverage is a bit weak.
