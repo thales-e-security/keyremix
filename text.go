@@ -5,44 +5,90 @@ import (
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"fmt"
+	"math/big"
+	"strings"
 )
 
 type text struct {
 }
 
+type value struct {
+	name  string
+	value interface{}
+}
+
 func (p *text) Serialize(key interface{}, args map[string]string) (output []byte, err error) {
 	f := &bytes.Buffer{}
 
+	var ok bool
+	var base string
+	if base, ok = args["base"]; !ok {
+		base = "hex"
+	}
+	format := "%x"
+	switch strings.ToLower(base) {
+	case "dec", "10":
+		format = "%d"
+	case "oct", "8":
+		format = "%#o"
+	case "hex", "16":
+		format = "%#x"
+	default:
+		err = fmt.Errorf("unknown base indicator")
+		return
+	}
+	values := make([]value, 0, 16)
+
 	switch k := key.(type) {
 	case *rsa.PrivateKey:
-		if _, err = fmt.Fprintf(f, "n: %#x\ne: %#x\nd: %#x\np: %#x\nq: %#x\ndmp1: %#x\ndmq1: %#x\niqmp: %#x\n",
-			k.N, k.E,
-			k.D,
-			k.Primes[0], k.Primes[1],
-			k.Precomputed.Dp, k.Precomputed.Dq, k.Precomputed.Qinv); err != nil {
-			return
-		}
+		values = append(values, value{"n", k.N})
+		values = append(values, value{"e", k.E})
+		values = append(values, value{"d", k.D})
+		values = append(values, value{"p", k.Primes[0]})
+		values = append(values, value{"q", k.Primes[1]})
+		values = append(values, value{"dmp1", k.Precomputed.Dp})
+		values = append(values, value{"dmq1", k.Precomputed.Dq})
+		values = append(values, value{"iqmp", k.Precomputed.Qinv})
 	case *rsa.PublicKey:
-		if _, err = fmt.Fprintf(f, "n: %#x\ne: %#x\n",
-			k.N, k.E); err != nil {
-			return
-		}
+		values = append(values, value{"n", k.N})
+		values = append(values, value{"e", k.E})
 	case *ecdsa.PrivateKey:
-		if _, err = fmt.Fprintf(f, "curve: %s\nx: %#x\ny: %#x\nd: %#x\n",
-			k.Params().Name,
-			k.X, k.Y,
-			k.D); err != nil {
-			return
-		}
+		values = append(values, value{"curve", k.Params().Name})
+		values = append(values, value{"x", k.X})
+		values = append(values, value{"y", k.Y})
+		values = append(values, value{"d", k.D})
 	case *ecdsa.PublicKey:
-		if _, err = fmt.Fprintf(f, "curve: %s\nx: %#x\ny: %#x\n",
-			k.Params().Name,
-			k.X, k.Y); err != nil {
-			return
-		}
+		values = append(values, value{"curve", k.Params().Name})
+		values = append(values, value{"x", k.X})
+		values = append(values, value{"y", k.Y})
 	default:
 		err = ErrUnsuitableKeyType
 		return
+	}
+	for _, value := range values {
+		if _, err = fmt.Fprintf(f, "%s: ", value.name); err != nil {
+			return
+		}
+		switch v := value.value.(type) {
+		case string:
+			if _, err = fmt.Fprintf(f, "%s", v); err != nil {
+				return
+			}
+		case *big.Int:
+			if _, err = fmt.Fprintf(f, format, v); err != nil {
+				return
+			}
+		case int:
+			if _, err = fmt.Fprintf(f, format, v); err != nil {
+				return
+			}
+		default:
+			panic(fmt.Sprintf("unrecognized value type: %T", value.value))
+		}
+		if _, err = fmt.Fprintf(f, "\n"); err != nil {
+			return
+		}
+
 	}
 	output = f.Bytes()
 	return
