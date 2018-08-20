@@ -15,7 +15,7 @@ func (p *text) Serialize(key interface{}, args map[string]string) (output []byte
 
 	switch k := key.(type) {
 	case *rsa.PrivateKey:
-		if _, err = fmt.Fprintf(f, "n: %#x\ne: %#x\nd: %#x\np: %#x\nq: %#x\ndmp1: %#x\ndmq1: %#xiqmp: %#x\n",
+		if _, err = fmt.Fprintf(f, "n: %#x\ne: %#x\nd: %#x\np: %#x\nq: %#x\ndmp1: %#x\ndmq1: %#x\niqmp: %#x\n",
 			k.N, k.E,
 			k.D,
 			k.Primes[0], k.Primes[1],
