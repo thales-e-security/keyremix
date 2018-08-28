@@ -4,8 +4,8 @@ import (
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"fmt"
-	"git.tesfabric.com/ignite/keyremix"
 	"github.com/spf13/cobra"
+	"github.com/thales-e-security/keyremix"
 )
 
 func init() {

@@ -2,15 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "git.tesfabric.com/ignite/xcrypto"
-  packages = [
-    "pkcs12",
-    "pkcs12/internal/rc2"
-  ]
-  revision = "4a0b5d153e05daa92c8d4e2d9f2dccb3890eb92c"
-
-[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
@@ -54,7 +45,7 @@
   branch = "master"
   name = "github.com/spf13/cobra"
   packages = ["."]
-  revision = "7c4570c3ebeb8129a1f7456d0908a8b676b6f9f1"
+  revision = "6fd8e29b07d8242ebe2888060fede5766e240c25"
 
 [[projects]]
   name = "github.com/spf13/pflag"
@@ -73,9 +64,18 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/thales-e-security/xcrypto"
+  packages = [
+    "pkcs12",
+    "pkcs12/internal/rc2"
+  ]
+  revision = "f4483384015a22dd5ea4cd3e4f63828fb6528bcc"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "aabede6cba87e37f413b3e60ebfc214f8eeca1b0"
+  revision = "614d502a4dac94afa3a6ce146bd1736da82514c6"
 
 [[projects]]
   branch = "master"
@@ -84,11 +84,11 @@
     "unix",
     "windows"
   ]
-  revision = "1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded"
+  revision = "d99a578cf41bfccdeaf48b0845c823a4b8b0ad5e"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "938e72f83a8ef0b3a4ddabb43c543b34739a660f204b8349aad139d4d8610515"
+  inputs-digest = "45a2b28ad25d90a2dd97ba76fbc4fffd35d024fed56ad677837e013bfba559c0"
   solver-name = "gps-cdcl"
   solver-version = 1

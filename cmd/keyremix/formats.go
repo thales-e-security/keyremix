@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"git.tesfabric.com/ignite/keyremix"
 	"github.com/spf13/cobra"
+	"github.com/thales-e-security/keyremix"
 	"sort"
 )
 

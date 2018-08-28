@@ -4,7 +4,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"git.tesfabric.com/ignite/xcrypto/pkcs12"
+	"github.com/thales-e-security/xcrypto/pkcs12"
 	"io/ioutil"
 )
 

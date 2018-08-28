@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"git.tesfabric.com/ignite/keyremix"
+	"github.com/thales-e-security/keyremix"
 	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"os"

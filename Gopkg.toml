@@ -33,7 +33,7 @@
   branch = "master"
 
 [[constraint]]
-  name = "git.tesfabric.com/ignite/xcrypto"
+  name = "github.com/thales-e-security/xcrypto"
   branch = "master"
 
 [[constraint]]
