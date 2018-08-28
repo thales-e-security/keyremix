@@ -125,5 +125,4 @@ X.509 certificate format.
 
 * The set of key types and formats reflects what is easy to do with Go.
 * Encryption and decryption of keys is poorly supported.
-* Passwords are specified on the command line!
 * Test coverage is a bit weak.
