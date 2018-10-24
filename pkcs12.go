@@ -28,6 +28,7 @@ func (*pkcs12Format) Serialize(key interface{}, args map[string]string) (output 
 	var certpath string
 	if certpath, ok = args["certificate"]; ok {
 		var cert []byte
+		// #nosec G304
 		if cert, err = ioutil.ReadFile(certpath); err != nil {
 			return
 		}

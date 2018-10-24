@@ -25,6 +25,7 @@ func readInput(inputPath string, inputFormat string, inargs map[string]string) (
 			return
 		}
 	} else {
+		// #nosec G304
 		if input, err = ioutil.ReadFile(inputPath); err != nil {
 			return
 		}
