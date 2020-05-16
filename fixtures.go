@@ -6,7 +6,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 
-	"github.com/golang/go/src/log"
+	"log"
 )
 
 // openssl genrsa -out rsa-pkcs1.pem 1024

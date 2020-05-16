@@ -56,6 +56,9 @@ var ErrUnsuitableKeyType = errors.New("unsuitable key type")
 // ErrPasswordRequired is returned when a password is required.
 var ErrPasswordRequired = errors.New("password required")
 
+// ErrNotImplemented is returned when functionality is missing.
+var ErrNotImplemented = errors.New("not implemented")
+
 // KeyFormats is the collection of known key formats.
 var KeyFormats = map[string]KeyFormat{}
 

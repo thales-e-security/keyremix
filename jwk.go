@@ -3,15 +3,20 @@ package keyremix
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/lestrrat-go/jwx/jwk"
 	"strconv"
 	"strings"
+
+	"github.com/lestrrat-go/jwx/jwk"
 )
 
 type jwkFormat struct {
 }
 
 func (*jwkFormat) Serialize(key interface{}, args map[string]string) (output []byte, err error) {
+	if _, ok := args["password"]; ok {
+		err = ErrNotImplemented
+		return
+	}
 	var jkey jwk.Key
 	if jkey, err = jwk.New(key); err != nil {
 		return
