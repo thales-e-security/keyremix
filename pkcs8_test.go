@@ -2,8 +2,6 @@ package keyremix
 
 import (
 	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
 	"crypto/rsa"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -38,23 +36,21 @@ func TestPkcs8Pem(t *testing.T) {
 			assert.Equal(t, UnambiguousFit, fit)
 		})
 		t.Run("Serialize", func(t *testing.T) {
+			generateTestKeys()
 			var err error
-			var key *rsa.PrivateKey
-			key, err = rsa.GenerateKey(rand.Reader, 1024)
-			require.NoError(t, err)
 			var rest, output []byte
-			output, err = Pkcs8Pem.Serialize(key, nil)
+			output, err = Pkcs8Pem.Serialize(rsa1024, nil)
 			require.NoError(t, err)
 			var key2i interface{}
 			key2i, rest, err = Pkcs8Pem.Deserialize(output, nil)
 			require.NoError(t, err)
 			assert.Equal(t, 0, len(rest))
 			key2 := key2i.(*rsa.PrivateKey)
-			assert.Equal(t, key.N, key2.N)
-			assert.Equal(t, key.E, key2.E)
-			assert.Equal(t, key.D, key2.D)
-			assert.Equal(t, key.Primes[0], key2.Primes[0])
-			assert.Equal(t, key.Primes[1], key2.Primes[1])
+			assert.Equal(t, rsa1024.N, key2.N)
+			assert.Equal(t, rsa1024.E, key2.E)
+			assert.Equal(t, rsa1024.D, key2.D)
+			assert.Equal(t, rsa1024.Primes[0], key2.Primes[0])
+			assert.Equal(t, rsa1024.Primes[1], key2.Primes[1])
 		})
 	})
 	t.Run("EC", func(t *testing.T) {
@@ -83,22 +79,20 @@ func TestPkcs8Pem(t *testing.T) {
 			assert.Equal(t, UnambiguousFit, fit)
 		})
 		t.Run("Serialize", func(t *testing.T) {
+			generateTestKeys()
 			var err error
-			var key *ecdsa.PrivateKey
-			key, err = ecdsa.GenerateKey(elliptic.P384(), rand.Reader)
-			require.NoError(t, err)
 			var rest, output []byte
-			output, err = Pkcs8Pem.Serialize(key, nil)
+			output, err = Pkcs8Pem.Serialize(ecdsa384, nil)
 			require.NoError(t, err)
 			var key2i interface{}
 			key2i, rest, err = Pkcs8Pem.Deserialize(output, nil)
 			require.NoError(t, err)
 			assert.Equal(t, 0, len(rest))
 			key2 := key2i.(*ecdsa.PrivateKey)
-			assert.Equal(t, key.D, key2.D)
-			assert.Equal(t, key.Curve, key2.Curve)
-			assert.Equal(t, key.X, key2.X)
-			assert.Equal(t, key.Y, key2.Y)
+			assert.Equal(t, ecdsa384.D, key2.D)
+			assert.Equal(t, ecdsa384.Curve, key2.Curve)
+			assert.Equal(t, ecdsa384.X, key2.X)
+			assert.Equal(t, ecdsa384.Y, key2.Y)
 		})
 	})
 }
@@ -130,21 +124,18 @@ func TestPkcs8Der(t *testing.T) {
 	})
 	t.Run("Serialize", func(t *testing.T) {
 		var err error
-		var key *rsa.PrivateKey
-		key, err = rsa.GenerateKey(rand.Reader, 1024)
-		require.NoError(t, err)
 		var rest, output []byte
-		output, err = Pkcs8Der.Serialize(key, nil)
+		output, err = Pkcs8Der.Serialize(rsa1024, nil)
 		require.NoError(t, err)
 		var key2i interface{}
 		key2i, rest, err = Pkcs8Der.Deserialize(output, nil)
 		require.NoError(t, err)
 		assert.Equal(t, 0, len(rest))
 		key2 := key2i.(*rsa.PrivateKey)
-		assert.Equal(t, key.N, key2.N)
-		assert.Equal(t, key.E, key2.E)
-		assert.Equal(t, key.D, key2.D)
-		assert.Equal(t, key.Primes[0], key2.Primes[0])
-		assert.Equal(t, key.Primes[1], key2.Primes[1])
+		assert.Equal(t, rsa1024.N, key2.N)
+		assert.Equal(t, rsa1024.E, key2.E)
+		assert.Equal(t, rsa1024.D, key2.D)
+		assert.Equal(t, rsa1024.Primes[0], key2.Primes[0])
+		assert.Equal(t, rsa1024.Primes[1], key2.Primes[1])
 	})
 }

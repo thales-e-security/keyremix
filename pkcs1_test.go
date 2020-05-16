@@ -1,7 +1,6 @@
 package keyremix
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,23 +34,21 @@ func TestPkcs1Pem(t *testing.T) {
 		assert.Equal(t, UnambiguousFit, fit)
 	})
 	t.Run("Serialize", func(t *testing.T) {
+		generateTestKeys()
 		var err error
-		var key *rsa.PrivateKey
-		key, err = rsa.GenerateKey(rand.Reader, 1024)
-		require.NoError(t, err)
 		var rest, output []byte
-		output, err = Pkcs1Pem.Serialize(key, nil)
+		output, err = Pkcs1Pem.Serialize(rsa1024, nil)
 		require.NoError(t, err)
 		var key2i interface{}
 		key2i, rest, err = Pkcs1Pem.Deserialize(output, nil)
 		require.NoError(t, err)
 		assert.Equal(t, 0, len(rest))
 		key2 := key2i.(*rsa.PrivateKey)
-		assert.Equal(t, key.N, key2.N)
-		assert.Equal(t, key.E, key2.E)
-		assert.Equal(t, key.D, key2.D)
-		assert.Equal(t, key.Primes[0], key2.Primes[0])
-		assert.Equal(t, key.Primes[1], key2.Primes[1])
+		assert.Equal(t, rsa1024.N, key2.N)
+		assert.Equal(t, rsa1024.E, key2.E)
+		assert.Equal(t, rsa1024.D, key2.D)
+		assert.Equal(t, rsa1024.Primes[0], key2.Primes[0])
+		assert.Equal(t, rsa1024.Primes[1], key2.Primes[1])
 	})
 }
 
@@ -81,22 +78,20 @@ func TestPkcs1Der(t *testing.T) {
 		assert.Equal(t, AmbiguousFit, fit)
 	})
 	t.Run("Serialize", func(t *testing.T) {
+		generateTestKeys()
 		var err error
-		var key *rsa.PrivateKey
-		key, err = rsa.GenerateKey(rand.Reader, 1024)
-		require.NoError(t, err)
 		var rest, output []byte
-		output, err = Pkcs1Der.Serialize(key, nil)
+		output, err = Pkcs1Der.Serialize(rsa1024, nil)
 		require.NoError(t, err)
 		var key2i interface{}
 		key2i, rest, err = Pkcs1Der.Deserialize(output, nil)
 		require.NoError(t, err)
 		assert.Equal(t, 0, len(rest))
 		key2 := key2i.(*rsa.PrivateKey)
-		assert.Equal(t, key.N, key2.N)
-		assert.Equal(t, key.E, key2.E)
-		assert.Equal(t, key.D, key2.D)
-		assert.Equal(t, key.Primes[0], key2.Primes[0])
-		assert.Equal(t, key.Primes[1], key2.Primes[1])
+		assert.Equal(t, rsa1024.N, key2.N)
+		assert.Equal(t, rsa1024.E, key2.E)
+		assert.Equal(t, rsa1024.D, key2.D)
+		assert.Equal(t, rsa1024.Primes[0], key2.Primes[0])
+		assert.Equal(t, rsa1024.Primes[1], key2.Primes[1])
 	})
 }

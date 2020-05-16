@@ -46,16 +46,14 @@ func TestPkcs12(t *testing.T) {
 		assert.NoError(t, err)
 	})
 	t.Run("Serialize", func(t *testing.T) {
+		generateTestKeys()
 		var err error
-		var key *rsa.PrivateKey
-		key, err = rsa.GenerateKey(rand.Reader, 1024)
-		require.NoError(t, err)
 		// Need a certificate too
 		template := x509.Certificate{
 			SerialNumber: big.NewInt(1),
 		}
 		var cert []byte
-		cert, err = x509.CreateCertificate(rand.Reader, &template, &template, key.Public(), key)
+		cert, err = x509.CreateCertificate(rand.Reader, &template, &template, rsa1024.Public(), rsa1024)
 		require.NoError(t, err)
 		b := pem.Block{Type: "CERTIFICATE", Headers: nil, Bytes: cert}
 		certPem := pem.EncodeToMemory(&b)
@@ -66,7 +64,7 @@ func TestPkcs12(t *testing.T) {
 			"password":    "insecure",
 			"certificate": "TestPkcs12Serialize.crt",
 		}
-		output, err = Pkcs12.Serialize(key, args)
+		output, err = Pkcs12.Serialize(rsa1024, args)
 		require.NoError(t, err)
 		os.Remove("TestPkcs12Serialize.crt")
 		var key2i interface{}
@@ -74,11 +72,11 @@ func TestPkcs12(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, 0, len(rest))
 		key2 := key2i.(*rsa.PrivateKey)
-		assert.Equal(t, key.N, key2.N)
-		assert.Equal(t, key.E, key2.E)
-		assert.Equal(t, key.D, key2.D)
-		assert.Equal(t, key.Primes[0], key2.Primes[0])
-		assert.Equal(t, key.Primes[1], key2.Primes[1])
+		assert.Equal(t, rsa1024.N, key2.N)
+		assert.Equal(t, rsa1024.E, key2.E)
+		assert.Equal(t, rsa1024.D, key2.D)
+		assert.Equal(t, rsa1024.Primes[0], key2.Primes[0])
+		assert.Equal(t, rsa1024.Primes[1], key2.Primes[1])
 		var writtenCert []byte
 		writtenCert, err = ioutil.ReadFile("TestPkcs12Serialize.crt")
 		require.NoError(t, err)
