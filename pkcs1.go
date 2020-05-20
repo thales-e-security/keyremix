@@ -11,6 +11,10 @@ type pkcs1 struct {
 }
 
 func (p *pkcs1) Serialize(key interface{}, args map[string]string) (output []byte, err error) {
+	if _, ok := args["password"]; ok {
+		err = ErrNotImplemented
+		return
+	}
 	var name string
 	switch k := key.(type) {
 	case *rsa.PrivateKey:

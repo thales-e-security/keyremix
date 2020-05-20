@@ -1,5 +1,14 @@
 package keyremix
 
+import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/rsa"
+
+	"log"
+)
+
 // openssl genrsa -out rsa-pkcs1.pem 1024
 var rsaPkcs1Pem = `-----BEGIN RSA PRIVATE KEY-----
 MIICXgIBAAKBgQC9iLFZYoYVNVBPl32eTXMTqDYx+R9NfbewxxUxF8EMvnA7KJ1h
@@ -399,4 +408,19 @@ var rsaP12 = []byte{
 	0xbd, 0x3b, 0x7a, 0x3d, 0xe8, 0xdd, 0x4a, 0x04,
 	0x08, 0x5a, 0x93, 0x86, 0xf1, 0xc4, 0xfc, 0x06,
 	0x9c, 0x02, 0x02, 0x08, 0x00,
+}
+
+var rsa1024 *rsa.PrivateKey
+var ecdsa384 *ecdsa.PrivateKey
+
+func generateTestKeys() {
+	var err error
+	if rsa1024 == nil {
+		if rsa1024, err = rsa.GenerateKey(rand.Reader, 1024); err != nil {
+			log.Panicf("rsa.GenerateKey: %v", err)
+		}
+		if ecdsa384, err = ecdsa.GenerateKey(elliptic.P384(), rand.Reader); err != nil {
+			log.Panicf("ecdsa.GenerateKey: %v", err)
+		}
+	}
 }

@@ -18,6 +18,10 @@ type value struct {
 }
 
 func (p *text) Serialize(key interface{}, args map[string]string) (output []byte, err error) {
+	if _, ok := args["password"]; ok {
+		err = ErrNotImplemented
+		return
+	}
 	f := &bytes.Buffer{}
 
 	var ok bool
